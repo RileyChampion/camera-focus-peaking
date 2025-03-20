@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { start } from "repl";
+import { useVideoMenu } from "./VideoMenu";
 
 interface FocusPeakingProps {
-    peakingEnabled: boolean,
-    sensitivity: number,
-    peakingColor: string,
     videoRef: React.RefObject<null>
 }
 
-function FocusPeaking({peakingEnabled, sensitivity, peakingColor, videoRef}: FocusPeakingProps) {
+function FocusPeaking({videoRef}: FocusPeakingProps) {
+    const {showFocusPeaking, color, threshold } = useVideoMenu();
+
     const canvasRef = useRef(null);
     
     return (

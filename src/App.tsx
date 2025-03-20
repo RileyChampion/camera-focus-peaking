@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Camera } from "lucide-react"
 import { ChangeEvent, useState } from "react"
+import { VideoMenuProvider, useVideoMenu } from "./components/VideoMenu"
 import VideoFeed from "./components/VideoFeed"
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
     // Need checks for file type and successful upload
     if (file) {
       setVideoFile(file);
-      setFeed('UPLOAD')
+      setFeed('UPLOAD');
     }
   }
 
@@ -26,14 +27,17 @@ function App() {
           <Input onInput={handleFileUpload} accept="video/*" className="bg-white border-none text-black hover:bg-white/70 cursor-pointer transition-all" type="file"/>
         </div>
       }
-      { feed == 'WEBCAM' && 
-        <div>
-
-        </div>
+      { feed != 'NONE' && 
+        <VideoMenuProvider>
+          { feed == 'WEBCAM' && 
+            <></>
+          }
+          { feed == 'UPLOAD' &&
+            <VideoFeed uploadedFile={videoFile}/>
+          }
+        </VideoMenuProvider>
       }
-      { feed == 'UPLOAD' &&
-        <VideoFeed uploadedFile={videoFile}/>
-      }
+      
     </div>
   )
 }
