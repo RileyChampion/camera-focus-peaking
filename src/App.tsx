@@ -1,20 +1,29 @@
 import { Button } from "@/components/ui/button"
-import { Input } from "./components/ui/input"
+import { Input } from "@/components/ui/input"
 import { Camera } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
-import FocusPeakingWebcam from "./components/FocusPeakingWebcam"
+import { ChangeEvent, useState } from "react"
+import VideoFeed from "./components/VideoFeed"
 
 function App() {
   const [feed, setFeed] = useState("NONE")
-  const [videoFile, setVideoFile] = useState(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+
+  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    // Need checks for file type and successful upload
+    if (file) {
+      setVideoFile(file);
+      setFeed('UPLOAD')
+    }
+  }
 
   return (
-    <div className="flex items-center justify-center min-h-svh bg-gray-900">
+    <div className="flex items-center justify-center min-h-screen bg-gray-900">
       { feed == 'NONE' &&
         <div className="flex flex-col items-center justify-center w-50">
           <Button className="w-50 mb-2 cursor-pointer" variant="secondary"><Camera /> Use Your Webcam</Button>
           <p className="text-white mb-2">OR</p>
-          <Input className="bg-white border-none text-black hover:bg-white/70 cursor-pointer transition-all" type="file"/>
+          <Input onInput={handleFileUpload} accept="video/*" className="bg-white border-none text-black hover:bg-white/70 cursor-pointer transition-all" type="file"/>
         </div>
       }
       { feed == 'WEBCAM' && 
@@ -23,9 +32,7 @@ function App() {
         </div>
       }
       { feed == 'UPLOAD' &&
-        <div>
-
-        </div>
+        <VideoFeed uploadedFile={videoFile}/>
       }
     </div>
   )
