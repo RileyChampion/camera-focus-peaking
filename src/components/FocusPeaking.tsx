@@ -2,28 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { start } from "repl";
 
 interface FocusPeakingProps {
-    show: boolean,
-    videoReference: React.RefObject<null>
+    peakingEnabled: boolean,
+    sensitivity: number,
+    peakingColor: string,
+    videoRef: React.RefObject<null>
 }
 
-function FocusPeaking({show, videoReference}: FocusPeakingProps) {
-    const [peakingEnabled, setPeakingEnabled] = useState(show);
-
+function FocusPeaking({peakingEnabled, sensitivity, peakingColor, videoRef}: FocusPeakingProps) {
     const canvasRef = useRef(null);
-
-    // const startFocusPeaking = () => {
-    //     if (!videoReference.current || !canvasRef.current) {
-    //         return;
-    //     }
-
-    //     const video = videoReference.current;
-    //     const canvas = canvasRef.current;
-    //     const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    // }
-    
-    // useEffect(() => {
-    //     startFocusPeaking();
-    // }, [])
     
     return (
         <canvas
