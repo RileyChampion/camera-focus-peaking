@@ -49,16 +49,16 @@ function FocusPeaking() {
         video.addEventListener('loadedmetadata', resizeCanvas);
         
         const processFrame = () => {
-            if (!video.videoWidth) {
+            if (!video.videoWidth ) {
                 // Video dimensions not ready yet, wait for next frame
                 animationRef.current = requestAnimationFrame(processFrame);
                 return;
             }
             
             // Ensure canvas and video dimensions match on each frame
-            if (canvas.width !== video.width || canvas.height !== video.height) {
-                canvas.width = video.width;
-                canvas.height = video.height;
+            if (canvas.width !== video.clientWidth || canvas.height !== video.clientHeight) {
+                canvas.width = video.clientWidth;
+                canvas.height = video.clientHeight;
             }
             
             try {
@@ -168,7 +168,7 @@ function FocusPeaking() {
     return (
         <canvas
             ref={canvasRef}
-            className="absolute top-0 left-0 z-2"
+            className="absolute top-0 left-0 object-fill z-2"
         />
     )
 }

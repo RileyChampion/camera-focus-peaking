@@ -25,7 +25,7 @@ function VideoFeed({feedType, uploadedFile}: VideoFeedProps) {
         return () => {
             registerVideoElement(null);
         }
-    }, [registerVideoElement]);
+    }, []);
 
     return (
         <div className="fixed min-h-fit bg-gray-900">
@@ -37,7 +37,6 @@ function VideoFeed({feedType, uploadedFile}: VideoFeedProps) {
                         playsInline
                         muted
                         loop
-                        height={405}
                         width={720}
                         className="" 
                     />

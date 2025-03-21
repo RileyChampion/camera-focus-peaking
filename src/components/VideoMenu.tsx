@@ -61,12 +61,30 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
     }
 
     const startWebcam = async (): Promise<void> => {
-        return;
-    }
-
-    const stopWebcam = () => {
-        return;
-    }
+        if (!videoRef) return;
+        
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            videoRef.srcObject = stream;
+            videoRef.play();
+            setIsWebcamActive(true);
+        } catch (error) {
+            console.error("Error accessing webcam:", error);
+        }
+    };
+    
+    // Function to stop webcam
+    const stopWebcam = (): void => {
+        if (!videoRef) return;
+        
+        const stream = videoRef.srcObject as MediaStream;
+        if (stream) {
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            videoRef.srcObject = null;
+        }
+        setIsWebcamActive(false);
+    };
 
     const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -77,10 +95,12 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
 
     // Handle video feed changes
     useEffect(() => {
-        if (videoFeed === "WEBCAM") {
+        if (videoFeed === "WEBCAM" && !isWebcamActive) {
             startWebcam();
         } else if (videoFeed === "UPLOAD") {
-            stopWebcam();
+            if (isWebcamActive) {
+                stopWebcam();
+            }
             
             // Load uploaded video if available
             if (videoRef && uploadedVideoFile) {
@@ -91,6 +111,7 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
 
     const handleFeedChange = (value: string | undefined) => {
         if (value === "WEBCAM" || value === "UPLOAD") {
+            console.log(value);
             setVideoFeed(value);
         }
     };

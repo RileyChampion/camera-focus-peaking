@@ -10,6 +10,10 @@ function App() {
   const [feed, setFeed] = useState<FeedType>(FeedType.NONE)
   const [videoFile, setVideoFile] = useState<File | null>(null);
 
+  const handleWebcam = () => {
+    setFeed(FeedType.WEBCAM)
+  }
+
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     // Need checks for file type and successful upload
@@ -23,7 +27,7 @@ function App() {
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
       { feed == FeedType.NONE &&
         <div className="flex flex-col items-center justify-center w-50">
-          <Button className="w-50 mb-2 cursor-pointer" variant="secondary"><Camera /> Use Your Webcam</Button>
+          <Button onClick={handleWebcam} className="w-50 mb-2 cursor-pointer" variant="secondary"><Camera /> Use Your Webcam</Button>
           <p className="text-white mb-2">OR</p>
           <Input onInput={handleFileUpload} accept="video/*" className="bg-white border-none text-black hover:bg-white/70 cursor-pointer transition-all" type="file"/>
         </div>
