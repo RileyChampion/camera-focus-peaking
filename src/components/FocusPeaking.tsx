@@ -38,9 +38,9 @@ function FocusPeaking() {
         
         // Set canvas dimensions to match video
         const resizeCanvas = () => {
-            if (video.videoWidth && video.videoHeight) {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
+            if (video.clientWidth && video.clientHeight) {
+                canvas.width = video.clientWidth;
+                canvas.height = video.clientHeight;
             }
         };
         

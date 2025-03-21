@@ -27,6 +27,7 @@ interface VideoMenuContextType {
     registerVideoElement: (element: HTMLVideoElement | null) => void;
     uploadedVideoFile: File | null;
     setUploadedVideoFile: (file: File | null) => void;
+    isWebcamActive: boolean;
 }
 
 const VideoMenuContext = createContext<VideoMenuContextType | undefined>(undefined);
@@ -35,12 +36,16 @@ interface VideoMenuProviderProps {
     children?: ReactNode;
 }
 
+const VIDEO_WIDTH_START = 720;
+const VIDEO_WIDTH_STOP = 0;
+
 export function VideoMenuProvider({children}: VideoMenuProviderProps) {
     const [showFocusPeaking, setShowFocusPeaking] = useState<boolean>(false);
     const [threshold, setThreshold] = useState<number>(50);
     const [color, setColor] = useState<string>('#ff0000');
     const [videoFeed, setVideoFeed] = useState<string>("");
     const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
+    const [videoLoading, setVideoLoading] = useState<boolean>(false);
     const [uploadedVideoFile, setUploadedVideoFile] = useState<File | null>(null);
     const [isWebcamActive, setIsWebcamActive] = useState<boolean>(false);
 
@@ -66,6 +71,7 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             videoRef.srcObject = stream;
+            videoRef.width = VIDEO_WIDTH_START
             videoRef.play();
             setIsWebcamActive(true);
         } catch (error) {
@@ -81,6 +87,7 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
         if (stream) {
             const tracks = stream.getTracks();
             tracks.forEach(track => track.stop());
+            videoRef.width = VIDEO_WIDTH_STOP
             videoRef.srcObject = null;
         }
         setIsWebcamActive(false);
@@ -96,6 +103,10 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
     // Handle video feed changes
     useEffect(() => {
         if (videoFeed === "WEBCAM" && !isWebcamActive) {
+            if (videoRef && uploadedVideoFile) {
+                videoRef.width = VIDEO_WIDTH_STOP
+                videoRef.src = "";
+            }
             startWebcam();
         } else if (videoFeed === "UPLOAD") {
             if (isWebcamActive) {
@@ -105,13 +116,14 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
             // Load uploaded video if available
             if (videoRef && uploadedVideoFile) {
                 videoRef.src = URL.createObjectURL(uploadedVideoFile);
+                videoRef.width = VIDEO_WIDTH_START
+                videoRef.play();
             }
         }
     }, [videoFeed, uploadedVideoFile, isWebcamActive]);
 
     const handleFeedChange = (value: string | undefined) => {
         if (value === "WEBCAM" || value === "UPLOAD") {
-            console.log(value);
             setVideoFeed(value);
         }
     };
@@ -129,6 +141,7 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
         registerVideoElement,
         uploadedVideoFile,
         setUploadedVideoFile,
+        isWebcamActive
     };
 
     return (
