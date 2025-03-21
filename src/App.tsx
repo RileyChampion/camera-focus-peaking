@@ -4,9 +4,10 @@ import { Camera } from "lucide-react"
 import { ChangeEvent, useState } from "react"
 import { VideoMenuProvider, useVideoMenu } from "./components/VideoMenu"
 import VideoFeed from "./components/VideoFeed"
+import { FeedType } from "./types/FeedType"
 
 function App() {
-  const [feed, setFeed] = useState("NONE")
+  const [feed, setFeed] = useState<FeedType>(FeedType.NONE)
   const [videoFile, setVideoFile] = useState<File | null>(null);
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -14,27 +15,25 @@ function App() {
     // Need checks for file type and successful upload
     if (file) {
       setVideoFile(file);
-      setFeed('UPLOAD');
+      setFeed(FeedType.UPLOAD);
     }
   }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
-      { feed == 'NONE' &&
+      { feed == FeedType.NONE &&
         <div className="flex flex-col items-center justify-center w-50">
           <Button className="w-50 mb-2 cursor-pointer" variant="secondary"><Camera /> Use Your Webcam</Button>
           <p className="text-white mb-2">OR</p>
           <Input onInput={handleFileUpload} accept="video/*" className="bg-white border-none text-black hover:bg-white/70 cursor-pointer transition-all" type="file"/>
         </div>
       }
-      { feed != 'NONE' && 
+      { feed != FeedType.NONE && 
         <VideoMenuProvider>
-          { feed == 'WEBCAM' && 
-            <></>
-          }
-          { feed == 'UPLOAD' &&
-            <VideoFeed uploadedFile={videoFile}/>
-          }
+          <VideoFeed
+            feedType={feed}
+            uploadedFile={videoFile}
+          />
         </VideoMenuProvider>
       }
       

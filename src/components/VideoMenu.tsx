@@ -1,4 +1,4 @@
-import { useState, createContext, ReactNode, useContext, JSX, ChangeEvent } from "react";
+import { useState, createContext, ReactNode, useContext, JSX, ChangeEvent, RefObject, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeClosed, Menu, Square } from "lucide-react";
 import { Label } from "@/components/ui/label";
@@ -22,9 +22,11 @@ interface VideoMenuContextType {
     color: string;
     changeColor: (color: string) => void;
     videoFeed: string;
-    changeVideoFeed: (feed: string) => void;
-    videoSrc: File | null;
-    changeVideoSrc: (file: File | null | undefined) => void;
+    handleFeedChange: (feed: string | undefined) => void;
+    videoRef: HTMLVideoElement | null
+    registerVideoElement: (element: HTMLVideoElement | null) => void;
+    uploadedVideoFile: File | null;
+    setUploadedVideoFile: (file: File | null) => void;
 }
 
 const VideoMenuContext = createContext<VideoMenuContextType | undefined>(undefined);
@@ -35,32 +37,63 @@ interface VideoMenuProviderProps {
 
 export function VideoMenuProvider({children}: VideoMenuProviderProps) {
     const [showFocusPeaking, setShowFocusPeaking] = useState<boolean>(false);
-    const [threshold, setThreshold] = useState<number>(25);
+    const [threshold, setThreshold] = useState<number>(50);
     const [color, setColor] = useState<string>('#ff0000');
     const [videoFeed, setVideoFeed] = useState<string>("");
-    const [videoSrc, setVideoSrc] = useState<File | null>(null);
+    const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
+    const [uploadedVideoFile, setUploadedVideoFile] = useState<File | null>(null);
+    const [isWebcamActive, setIsWebcamActive] = useState<boolean>(false);
+
+    const videoElementRef = useRef<HTMLVideoElement | null>(null);
+
+    const registerVideoElement = (element: HTMLVideoElement | null) => {
+        setVideoRef(element);
+    }
 
     const toggleShowFocusPeaking = () => setShowFocusPeaking(!showFocusPeaking);
     
     const changeThreshold = (value: number[]) => {
         setThreshold(value[0]);
     }
+
     const changeColor = (color : string) => {
         setColor(color)
     }
-    const changeVideoFeed = (feed: string) => {
-        setVideoFeed(feed);
+
+    const startWebcam = async (): Promise<void> => {
+        return;
     }
+
+    const stopWebcam = () => {
+        return;
+    }
+
     const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        changeVideoSrc(file);
-    }
-    const changeVideoSrc = (file: File | null | undefined) => {
         if (file) {
-            setVideoSrc(file);
-            changeVideoFeed('UPLOAD');
+            setUploadedVideoFile(file);
         }
     }
+
+    // Handle video feed changes
+    useEffect(() => {
+        if (videoFeed === "WEBCAM") {
+            startWebcam();
+        } else if (videoFeed === "UPLOAD") {
+            stopWebcam();
+            
+            // Load uploaded video if available
+            if (videoRef && uploadedVideoFile) {
+                videoRef.src = URL.createObjectURL(uploadedVideoFile);
+            }
+        }
+    }, [videoFeed, uploadedVideoFile, isWebcamActive]);
+
+    const handleFeedChange = (value: string | undefined) => {
+        if (value === "WEBCAM" || value === "UPLOAD") {
+            setVideoFeed(value);
+        }
+    };
 
     const contextValue = {
         showFocusPeaking,
@@ -70,18 +103,20 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
         color,
         changeColor,
         videoFeed,
-        changeVideoFeed,
-        videoSrc,
-        changeVideoSrc
+        handleFeedChange,
+        videoRef,
+        registerVideoElement,
+        uploadedVideoFile,
+        setUploadedVideoFile,
     };
 
     return (
         <VideoMenuContext.Provider value={contextValue}>
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button className="absolute top-5 right-5 z-3"><Menu/></Button>
+                    <Button variant={"secondary"} className="absolute top-5 right-5 z-3"><Menu/></Button>
                 </PopoverTrigger>
-                <PopoverContent className="bg-primary border-primary w-80">
+                <PopoverContent className="bg-primary w-80">
                     <div className="grid gap-4">
                         <div className="space-y-2">
                             <h4 className="font-medium leading-none text-white">Dimensions</h4>
@@ -104,7 +139,7 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
                                     className=""
                                     onValueChange={changeThreshold}
                                     defaultValue={[threshold]}
-                                    max={50}
+                                    max={100}
                                     step={1}
                                 />
                             </div>
@@ -124,7 +159,7 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
                             </div>
                             <div className="grid mt-3 mb-1 grid-cols-2 items-center gap-1">
                                 <Label className="text-white" htmlFor="threshold">Video Feed:</Label>
-                                <ToggleGroup className="text-muted-foreground" value={videoFeed} onValueChange={changeVideoFeed} type="single">
+                                <ToggleGroup className="text-muted-foreground" value={videoFeed} onValueChange={handleFeedChange} type="single">
                                     <ToggleGroupItem variant={"outline"} className="hover:bg-gray-600/50 hover:text-white" value="UPLOAD" aria-label="Toggle to upload video.">
                                         <p className="">Upload</p>
                                     </ToggleGroupItem>
@@ -136,7 +171,7 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
                             { videoFeed == 'UPLOAD' &&
                                 <div className="grid mt-3 mb-1 grid-cols-1 items-center gap-1">
                                     <Input type="file" onInput={handleFileUpload} accept="video/*" className="bg-white border-none text-black hover:bg-white/70 cursor-pointer transition-all" />
-                                    <p className="mt-3 text-white">Selected Video: {videoSrc == null ? 'No Upload' : videoSrc.name }</p>
+                                    <p className="mt-3 text-white">Selected Video: {uploadedVideoFile == null ? 'No Upload' : uploadedVideoFile.name }</p>
                                 </div>
                             }
                             { videoFeed =='WEBCAM' && 
