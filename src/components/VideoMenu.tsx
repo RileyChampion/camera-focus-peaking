@@ -36,7 +36,7 @@ interface VideoMenuProviderProps {
     children?: ReactNode;
 }
 
-const VIDEO_WIDTH_START = 720;
+const VIDEO_WIDTH_START = 1024;
 const VIDEO_WIDTH_STOP = 0;
 
 export function VideoMenuProvider({children}: VideoMenuProviderProps) {
@@ -45,26 +45,28 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
     const [color, setColor] = useState<string>('#ff0000');
     const [videoFeed, setVideoFeed] = useState<string>("");
     const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
-    const [videoLoading, setVideoLoading] = useState<boolean>(false);
     const [uploadedVideoFile, setUploadedVideoFile] = useState<File | null>(null);
     const [isWebcamActive, setIsWebcamActive] = useState<boolean>(false);
 
-    const videoElementRef = useRef<HTMLVideoElement | null>(null);
-
+    // Register video reference to Video Menu Provider
     const registerVideoElement = (element: HTMLVideoElement | null) => {
         setVideoRef(element);
     }
-
+    
+    // Toggle showing focus peaking
     const toggleShowFocusPeaking = () => setShowFocusPeaking(!showFocusPeaking);
     
+    // Handle change threshold
     const changeThreshold = (value: number[]) => {
         setThreshold(value[0]);
     }
 
+    // Handle change color
     const changeColor = (color : string) => {
         setColor(color)
     }
 
+    // Function to start webcam
     const startWebcam = async (): Promise<void> => {
         if (!videoRef) return;
         
@@ -93,6 +95,7 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
         setIsWebcamActive(false);
     };
 
+    // Handles file uploads
     const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -117,11 +120,11 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
             if (videoRef && uploadedVideoFile) {
                 videoRef.src = URL.createObjectURL(uploadedVideoFile);
                 videoRef.width = VIDEO_WIDTH_START
-                videoRef.play();
             }
         }
     }, [videoFeed, uploadedVideoFile, isWebcamActive]);
 
+    // Handles setting video feed
     const handleFeedChange = (value: string | undefined) => {
         if (value === "WEBCAM" || value === "UPLOAD") {
             setVideoFeed(value);
@@ -229,9 +232,3 @@ export function useVideoMenu(): VideoMenuContextType {
     }
     return context;
 }
-
-// function VideoMenu(): JSX.Element {
-//     return <VideoMenuProvider />
-// }
-
-// export default VideoMenu;

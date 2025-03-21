@@ -1,10 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { start } from "repl";
 import { useVideoMenu } from "./VideoMenu";
-
-// interface FocusPeakingProps {
-//     videoRef: React.RefObject<null>
-// }
 
 function FocusPeaking() {
     const {showFocusPeaking, color, threshold} = useVideoMenu();
@@ -13,6 +8,7 @@ function FocusPeaking() {
     
     const {videoRef} = useVideoMenu();
     
+    // Convert hex to RGB array
     const hexToRGB = (hex: string): [number, number, number]=> {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         
@@ -25,6 +21,7 @@ function FocusPeaking() {
         : [255, 0 , 0]
     }
 
+    // Starts focus peaking algorithm
     const startFocusPeaking = () => {
         if (!videoRef || !canvasRef.current) {
             return;
@@ -36,7 +33,7 @@ function FocusPeaking() {
         
         if (!ctx) return;
         
-        // Set canvas dimensions to match video
+        // Set canvas dimensions to match video with client information
         const resizeCanvas = () => {
             if (video.clientWidth && video.clientHeight) {
                 canvas.width = video.clientWidth;
@@ -49,7 +46,7 @@ function FocusPeaking() {
         video.addEventListener('loadedmetadata', resizeCanvas);
         
         const processFrame = () => {
-            if (!video.videoWidth ) {
+            if (!video.clientWidth ) {
                 // Video dimensions not ready yet, wait for next frame
                 animationRef.current = requestAnimationFrame(processFrame);
                 return;
@@ -88,7 +85,6 @@ function FocusPeaking() {
                     
                     // Sobel operator for edge detection
                     const w = canvas.width;
-                    // const threshold = sensitivity;
                     
                     // Apply edge detection algorithm (simplified Sobel)
                     for (let y = 1; y < canvas.height - 1; y++) {
@@ -149,6 +145,7 @@ function FocusPeaking() {
         animationRef.current = requestAnimationFrame(processFrame);
     };
     
+    // Update focus peaking when video menu elements change
     useEffect(() => {
         startFocusPeaking();
         

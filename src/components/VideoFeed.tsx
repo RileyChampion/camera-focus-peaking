@@ -4,6 +4,7 @@ import { useVideoMenu } from "./VideoMenu";
 import { FeedType } from "@/types/FeedType";
 import { Upload } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Spinner } from "@/components/ui/spinner";
 
 interface VideoFeedProps {
     feedType : FeedType
@@ -25,6 +26,7 @@ function VideoFeed({feedType, uploadedFile}: VideoFeedProps) {
         setUploadedVideoFile,
     } = useVideoMenu();
 
+    // Convert hex to color string
     const hexToColorString = (hex: string) => {
         switch(hex) {
             case "#ff0000":
@@ -38,14 +40,17 @@ function VideoFeed({feedType, uploadedFile}: VideoFeedProps) {
         }
     }
 
+    // Check if webcam is ready
     const checkIfWebcamIsReady = () => {
         return videoFeed == 'WEBCAM' && isWebcamActive;
     }
 
+    // Check if file upload is ready
     const checkIfFileUploadIsReady = () => {
         return videoFeed == 'UPLOAD' && uploadedVideoFile && !isWebcamActive;
     }
 
+    // On first render, register video element, set feed type and set uploadedFile if provided
     useEffect(() => {
         if (localVideoRef.current) {
             registerVideoElement(localVideoRef.current);
@@ -70,7 +75,8 @@ function VideoFeed({feedType, uploadedFile}: VideoFeedProps) {
             }
             {videoFeed == 'WEBCAM' && !isWebcamActive &&
                 <div className="flex flex-col justify-center items-center text-secondary">
-                    <h1 className="text-white">LOADING WEBCAM...</h1>
+                    <Spinner className="text-secondary w-15 h-15 mb-2" size={"large"} />
+                    <h1 className="text-white text-2xl">LOADING WEBCAM...</h1>
                 </div>
             }
             {videoFeed != "NONE" &&
