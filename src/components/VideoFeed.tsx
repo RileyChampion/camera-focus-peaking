@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import FocusPeaking from "./FocusPeaking";
 import { useVideoMenu } from "./VideoMenu";
 import { FeedType } from "@/types/FeedType";

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Camera, Focus } from "lucide-react"
 import { ChangeEvent, useState } from "react"
-import { VideoMenuProvider, useVideoMenu } from "./components/VideoMenu"
+import { VideoMenuProvider } from "./components/VideoMenu"
 import VideoFeed from "./components/VideoFeed"
 import { FeedType } from "./types/FeedType"
 
