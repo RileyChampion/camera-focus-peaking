@@ -91,12 +91,6 @@ function FocusPeaking() {
                         for (let x = 1; x < canvas.width - 1; x++) {
                             const idx = (y * w + x) * 4;
                             
-                            // Calculate luminance of current pixel
-                            const r = data[idx];
-                            const g = data[idx + 1];
-                            const b = data[idx + 2];
-                            const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-                            
                             // Calculate luminance of neighboring pixels
                             const idxLeft = (y * w + (x - 1)) * 4;
                             const lumaLeft = 0.299 * data[idxLeft] + 0.587 * data[idxLeft + 1] + 0.114 * data[idxLeft + 2];
