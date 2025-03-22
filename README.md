@@ -68,7 +68,7 @@ Adding a Gaussian blur pre-processing step would significantly improve the quali
 
 *Image of uploaded video footage (focus peaking disabled)*
 
-<img width="1470" alt="Screenshot 2025-03-22 at 2 19 42 AM" src="https://github.com/user-attachments/assets/a8fc3483-050d-481d-8d4a-21e4468ec2c9" />
+<img width="1470" alt="Screenshot 2025-03-22 at 1 04 50 PM" src="https://github.com/user-attachments/assets/c8260878-29ae-47be-ae1d-392a97a3fc21" />
 
 *Image of uploaded video footage (focus peaking enabled)*
 
