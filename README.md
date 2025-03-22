@@ -53,3 +53,14 @@ Implementing WebGL would shift image processing from the CPU to the GPU, providi
 `./run.sh`
 
 ## Demo
+<img width="1470" alt="Screenshot 2025-03-22 at 2 19 08 AM" src="https://github.com/user-attachments/assets/ec06b253-c240-4f70-a380-4aa573742c43" />
+
+*Image of landing page*
+
+<img width="1470" alt="Screenshot 2025-03-22 at 2 19 24 AM" src="https://github.com/user-attachments/assets/14813eb3-ab2f-437f-915b-b4b113fdee9f" />
+
+*Image of uploaded video footage (focus peaking disabled)*
+
+<img width="1470" alt="Screenshot 2025-03-22 at 2 19 42 AM" src="https://github.com/user-attachments/assets/a8fc3483-050d-481d-8d4a-21e4468ec2c9" />
+
+*Image of uploaded video footage (focus peaking enabled)*
