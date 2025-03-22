@@ -186,8 +186,8 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
                                     <ToggleGroupItem className="hover:bg-gray-600/50" value="#ff0000" aria-label="Toggle red peaking color">
                                         <Square color="#ff0000" fill="#ff0000" />
                                     </ToggleGroupItem>
-                                    <ToggleGroupItem className="hover:bg-gray-600/50" value="#00ff00" aria-label="Toggle green peaking color">
-                                        <Square color="#00ff00" fill="#00ff00" />
+                                    <ToggleGroupItem className="hover:bg-gray-600/50" value="#ffff00" aria-label="Toggle green peaking color">
+                                        <Square color="#ffff00" fill="#ffff00" />
                                     </ToggleGroupItem>
                                     <ToggleGroupItem className="hover:bg-gray-600/50" value="#0000ff" aria-label="Toggle blue peaking color">
                                         <Square color="#0000ff" fill="#0000ff" />
