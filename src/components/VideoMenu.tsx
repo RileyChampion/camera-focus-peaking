@@ -176,7 +176,7 @@ export function VideoMenuProvider({children}: VideoMenuProviderProps) {
                                     className=""
                                     onValueChange={changeThreshold}
                                     defaultValue={[threshold]}
-                                    max={100}
+                                    max={255}
                                     step={1}
                                 />
                             </div>

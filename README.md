@@ -11,7 +11,7 @@
 This application implements a real-time focus peaking effect for both uploaded videos and webcam footage directly in the browser. Focus peaking is a technique commonly used in photography and videography to highlight in-focus areas, making it easier to ensure proper focus before capturing an image.
 
 ## Approach
-My implementation is based on research from various focus peaking algorithms and techniques, including Paul Bourke's work on [Focus Peaking](https://paulbourke.net/miscellaneous/focuspeaking/).
+My implementation is based on research from various focus peaking algorithms and techniques, including Paul Bourke's work on [Focus Peaking](https://paulbourke.net/miscellaneous/focuspeaking/) and R. Fisher, S. Perkins, A. Walker, and E. Wolfart [Sobel Edge Detector](https://homepages.inf.ed.ac.uk/rbf/HIPR2/sobel.htm).
 
 The application is designed to process images entirely client-side using React, eliminating the need for a backend server. I utilized HTML5 Canvas elements to create and overlay the focus peaking effect on both video and webcam feeds. The architecture follows these principles:
 
@@ -46,6 +46,13 @@ Implementing WebGL would shift image processing from the CPU to the GPU, providi
 - Support for more complex algorithms
 - Better overall performance for high-resolution footage
 
+### Gaussian Blur Pre-processing
+Adding a Gaussian blur pre-processing step would significantly improve the quality of edge detection, particularly for noisy footage:
+- Reduces noise and grain in the source footage
+- Smooths out minor variations that could trigger false edge detections
+- Creates more defined and accurate edge highlighting
+- Allows for better performance on lower quality video sources
+
 ## Installation and Usage
 1. Run the installation script to install all necessary packages:
 `./install.sh`
@@ -64,3 +71,9 @@ Implementing WebGL would shift image processing from the CPU to the GPU, providi
 <img width="1470" alt="Screenshot 2025-03-22 at 2 19 42 AM" src="https://github.com/user-attachments/assets/a8fc3483-050d-481d-8d4a-21e4468ec2c9" />
 
 *Image of uploaded video footage (focus peaking enabled)*
+
+## References
+
+[1] P. Bourke, "Focus Peaking," Paul Bourke Personal Pages, March 2022. [Online]. Available: https://paulbourke.net/miscellaneous/focuspeaking/
+
+[2] R. Fisher, S. Perkins, A. Walker, and E. Wolfart, "Sobel Edge Detector," Hypermedia Image Processing Reference (HIPR2), School of Informatics, University of Edinburgh, 2004. [Online]. Available: https://homepages.inf.ed.ac.uk/rbf/HIPR2/sobel.htm

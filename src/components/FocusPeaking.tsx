@@ -82,8 +82,7 @@ function FocusPeaking() {
                     
                     // Extract RGB from peaking color
                     const [colorR, colorG, colorB] = hexToRGB(color)
-                    
-                    // Sobel operator for edge detection
+                
                     const w = canvas.width;
                     
                     // Apply edge detection algorithm (simplified Sobel)
@@ -103,10 +102,22 @@ function FocusPeaking() {
                             
                             const idxBottom = ((y + 1) * w + x) * 4;
                             const lumaBottom = 0.299 * data[idxBottom] + 0.587 * data[idxBottom + 1] + 0.114 * data[idxBottom + 2];
+
+                            const idxTopLeft = ((y - 1) * w + (x - 1)) * 4
+                            const lumaTopLeft = 0.299 * data[idxTopLeft] + 0.587 * data[idxTopLeft + 1] + 0.114 * data[idxTopLeft + 2];
+
+                            const idxTopRight = ((y - 1) * w + (x + 1)) * 4
+                            const lumaTopRight = 0.299 * data[idxTopRight] + 0.587 * data[idxTopRight + 1] + 0.114 * data[idxTopRight + 2];
+
+                            const idxBottomLeft = ((y + 1) * w + (x - 1)) * 4
+                            const lumaBottomLeft = 0.299 * data[idxBottomLeft] + 0.587 * data[idxBottomLeft + 1] + 0.114 * data[idxBottomLeft + 2];
+                            
+                            const idxBottomRight = ((y + 1) * w + (x + 1)) * 4
+                            const lumaBottomRight = 0.299 * data[idxBottomRight] + 0.587 * data[idxBottomRight + 1] + 0.114 * data[idxBottomRight + 2];
                             
                             // Calculate gradient magnitude (simplified)
-                            const gradX = Math.abs(lumaRight - lumaLeft);
-                            const gradY = Math.abs(lumaBottom - lumaTop);
+                            const gradX = Math.abs((2*lumaRight + lumaTopRight + lumaBottomRight) - (2*lumaLeft + lumaTopLeft + lumaBottomLeft));
+                            const gradY = Math.abs((2*lumaBottom + lumaBottomLeft + lumaBottomRight) - (2*lumaTop + lumaTopLeft + lumaTopRight));
                             const grad = Math.sqrt(gradX * gradX + gradY * gradY);
                             
                             // If gradient is above threshold, mark this pixel for focus peaking
